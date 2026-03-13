@@ -35,6 +35,20 @@ SolAura bridges the gap between AI and Solana. Connect your Solana wallet, type 
 
 AI micro-transactions require near-zero fees and instant finality. Solana is the only chain where this is practical at scale  making SolAura only possible on Solana.
 
+
+
+## Security
+
+- 🔒 Private keys never touch the AI layer
+- ✅ All wallet actions require explicit user confirmation
+- 🛡️ Bounded permissions prevent prompt injection attacks
+- 👁️ LLM only reads public wallet data never private keys
+- ⚠️ Every transaction shows a confirmation screen before signing
+
+
+
+
+
 ## Getting Started
 
 Clone the repository:
