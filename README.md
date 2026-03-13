@@ -8,16 +8,16 @@ SolAura is an open-source AI agent that connects to your Solana wallet and lets 
 
 ## The Problem
 
-Solana has incredible speed and near-zero fees, but the user experience is still too complex for most people. Connecting wallets, reading balances, sending tokens, and executing transactions requires technical knowledge that blocks mainstream adoption.
+Solana has incredible speed and near zero fees, but the user experience is still too complex for most people. Connecting wallets, reading balances, sending tokens, and executing transactions requires technical knowledge that blocks mainstream adoption.
 
 ## The Solution
 
-SolAura bridges the gap between AI and Solana. Connect your any sol wallet, type a command in plain English, and SolAura handles the rest.
+SolAura bridges the gap between AI and Solana. Connect your Solana wallet, type a command in plain English, and SolAura handles the rest.
 
 ## Features (Roadmap)
 
 - 💬 Natural language chat interface
-- 👛 Phantom wallet connection
+- 👛 Connect any Solana wallet
 - 📊 Real-time portfolio viewer
 - 💸 Send SOL and SPL tokens via chat
 - 🔍 Transaction history in plain English
@@ -35,9 +35,66 @@ SolAura bridges the gap between AI and Solana. Connect your any sol wallet, type
 
 AI micro-transactions require near-zero fees and instant finality. Solana is the only chain where this is practical at scale  making SolAura only possible on Solana.
 
+## Getting Started
+
+Clone the repository:
+```bash
+git clone https://github.com/ashersolana/solaura
+```
+
+Install dependencies:
+```bash
+npm install
+```
+
+Run locally:
+```bash
+npm run dev
+```
+
+## Architecture
+
+```
+User → Chat Interface → AI Parser → Solana Action Layer → Wallet Transaction
+```
+
+1. User sends a command
+2. AI interprets the intent
+3. SolAura maps intent to a Solana action
+4. Transaction is prepared and sent via wallet adapter
+
+## Example Commands
+
+- 💬 *"What's my SOL balance?"*
+- 💸 *"Send 0.2 SOL to 9x3...abc"*
+- 📊 *"Show my token portfolio"*
+- 🔍 *"Explain my last transaction"*
+
+## Roadmap
+
+### Phase 1  Core AI Wallet Interface
+- Build natural language chat interface
+- Connect Solana wallets via wallet adapter
+- Implement AI intent parser for wallet actions
+
+### Phase 2  Transaction Execution
+- Enable sending SOL and SPL tokens via chat
+- Add transaction confirmation flow
+- Implement safety checks before execution
+
+### Phase 3  Portfolio Intelligence
+- Real-time portfolio viewer
+- Natural language transaction history explanations
+- AI-generated portfolio insights
+
+### Phase 4  Open Source Developer Toolkit
+- Documentation for developers
+- Modular AI action framework
+- Allow developers to build their own wallet AI agents
+
 ## Status
 
-🚧 Currently in development 
+🚧 Currently in development
 
 ## Open Source
 
