@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SolAura — AI-powered Solana wallet assistant. Manage your wallet with plain English." />
+  <meta property="og:title" content="SolAura ✦" />
+  <meta property="og:description" content="AI-powered Solana wallet assistant" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="SolAura ✦" />
+  <meta name="twitter:description" content="AI-powered Solana wallet assistant — manage your wallet with plain English" />
+  <title>SolAura ✦ — AI Solana Wallet Assistant</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --dark: #060b18;
+      --navy: #1a2744;
+      --cyan: #00d4ff;
+      --cyan-dim: rgba(0,212,255,0.6);
+      --cyan-faint: rgba(0,212,255,0.08);
+      --text: #e0f4ff;
+      --text-dim: rgba(180,220,255,0.6);
+    }
+
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'Courier New', 'Lucida Console', monospace;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Radial glow */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 500px;
+      background: radial-gradient(ellipse, rgba(0,180,255,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      animation: glowPulse 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowPulse {
+      from { opacity: 0.4; }
+      to { opacity: 1; }
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* NAV */
+    nav {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 48px;
+      border-bottom: 1px solid rgba(0,212,255,0.08);
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: bold;
+      color: var(--cyan);
+      letter-spacing: 3px;
+      text-shadow: 0 0 20px rgba(0,212,255,0.6);
+    }
+
+    .logo-star {
+      font-size: 18px;
+      color: var(--cyan);
+      filter: drop-shadow(0 0 6px rgba(0,212,255,0.8));
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--cyan-dim);
+      text-decoration: none;
+      font-size: 13px;
+      letter-spacing: 2px;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--cyan); }
+
+    .connect-btn {
+      background: transparent;
+      border: 1px solid rgba(0,212,255,0.4);
+      color: var(--cyan);
+      padding: 8px 20px;
+      cursor: pointer;
+      font-size: 12px;
+      letter-spacing: 2px;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .connect-btn:hover,
+    .connect-btn.connected {
+      background: rgba(0,212,255,0.1);
+      box-shadow: 0 0 20px rgba(0,212,255,0.3);
+    }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 100px 48px 60px;
+      animation: fadeIn 0.8s ease 0.2s both;
+    }
+
+    .badge {
+      display: inline-block;
+      border: 1px solid rgba(0,212,255,0.2);
+      padding: 6px 16px;
+      margin-bottom: 32px;
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: rgba(0,212,255,0.7);
+      background: rgba(0,212,255,0.04);
+    }
+
+    .hero h1 {
+      font-size: clamp(38px, 7vw, 80px);
+      font-weight: bold;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      letter-spacing: -1px;
+    }
+
+    .hero h1 .accent {
+      color: var(--cyan);
+      text-shadow: 0 0 40px rgba(0,212,255,0.5);
+    }
+
+    .hero p {
+      font-size: 16px;
+      color: var(--text-dim);
+      max-width: 500px;
+      margin: 0 auto 48px;
+      line-height: 1.7;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #00d4ff, #0099cc);
+      border: none;
+      color: #060b18;
+      padding: 14px 36px;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 0 30px rgba(0,212,255,0.4);
+      transition: box-shadow 0.2s;
+    }
+
+    .btn-primary:hover { box-shadow: 0 0 50px rgba(0,212,255,0.7); }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid rgba(0,212,255,0.3);
+      color: rgba(0,212,255,0.8);
+      padding: 14px 36px;
+      font-size: 13px;
+      letter-spacing: 2px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: rgba(0,212,255,0.8);
+      background: rgba(0,212,255,0.05);
+    }
+
+    /* TERMINAL */
+    .terminal-section {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+      margin: 0 auto 100px;
+      padding: 0 24px;
+      animation: fadeIn 0.8s ease 0.4s both;
+    }
+
+    .terminal {
+      background: rgba(6,11,24,0.9);
+      border: 1px solid rgba(0,212,255,0.2);
+      box-shadow: 0 0 60px rgba(0,212,255,0.1);
+    }
+
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(0,212,255,0.1);
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .terminal-title {
+      margin-left: auto;
+      font-size: 11px;
+      color: rgba(0,212,255,0.4);
+      letter-spacing: 2px;
+    }
+
+    .terminal-body {
+      padding: 24px;
+      min-height: 160px;
+    }
+
+    .terminal-prompt {
+      margin-bottom: 16px;
+      font-size: 13px;
+    }
+
+    .prompt-prefix {
+      color: rgba(0,212,255,0.4);
+      font-size: 12px;
+    }
+
+    .prompt-text { color: var(--text); }
+
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 14px;
+      background: var(--cyan);
+      margin-left: 2px;
+      vertical-align: middle;
+      animation: blink 1s infinite;
+    }
+
+    .terminal-response {
+      padding: 12px 16px;
+      background: rgba(0,212,255,0.04);
+      border-left: 2px solid rgba(0,212,255,0.4);
+      font-size: 13px;
+      color: var(--cyan);
+      display: none;
+    }
+
+    .terminal-response.visible { display: block; }
+
+    .response-prefix {
+      color: rgba(0,212,255,0.5);
+      font-size: 11px;
+    }
+
+    /* FEATURES */
+    .features-section {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto 100px;
+      padding: 0 24px;
+      animation: fadeIn 0.8s ease 0.6s both;
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: rgba(0,212,255,0.5);
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .section-title {
+      font-size: clamp(24px, 4vw, 42px);
+      color: var(--text);
+      letter-spacing: -0.5px;
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: rgba(0,212,255,0.1);
+      border: 1px solid rgba(0,212,255,0.1);
+    }
+
+    .feature-card {
+      background: var(--dark);
+      padding: 32px 24px;
+      transition: background 0.2s;
+      cursor: default;
+    }
+
+    .feature-card:hover { background: rgba(0,212,255,0.04); }
+
+    .feature-icon {
+      font-size: 24px;
+      color: var(--cyan);
+      margin-bottom: 16px;
+      text-shadow: 0 0 10px rgba(0,212,255,0.5);
+    }
+
+    .feature-title {
+      font-size: 13px;
+      letter-spacing: 2px;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .feature-desc {
+      font-size: 13px;
+      color: rgba(180,220,255,0.5);
+      line-height: 1.6;
+    }
+
+    /* CTA */
+    .cta-section {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 80px 48px 100px;
+      border-top: 1px solid rgba(0,212,255,0.08);
+    }
+
+    .cta-section h2 {
+      font-size: clamp(24px, 4vw, 48px);
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .cta-section p {
+      color: rgba(180,220,255,0.5);
+      margin-bottom: 40px;
+      font-size: 15px;
+    }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 24px;
+      border-top: 1px solid rgba(0,212,255,0.06);
+      font-size: 12px;
+      color: rgba(0,212,255,0.3);
+      letter-spacing: 2px;
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 16px 20px; }
+      .nav-links a { display: none; }
+      .hero { padding: 60px 20px 40px; }
+      .terminal-section { padding: 0 16px; }
+      .features-section { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">
+      <span class="logo-text">SOLAURA</span>
+      <span class="logo-star">✦</span>
+    </div>
+    <div class="nav-links">
+      <a href="https://github.com/ashersolana/SolAura">Docs</a>
+      <a href="https://github.com/ashersolana/SolAura">GitHub</a>
+      <a href="#">Discord</a>
+      <button class="connect-btn" id="connectBtn" onclick="toggleConnect()">CONNECT WALLET</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="badge">◈ BUILT ON SOLANA · POWERED BY AI</div>
+    <h1>
+      YOUR SOLANA WALLET,<br />
+      <span class="accent">SPEAKS ENGLISH</span>
+    </h1>
+    <p>
+      SolAura is an open-source AI agent that lets you manage your Solana wallet
+      using natural language. No more complex interfaces.
+    </p>
+    <div class="hero-btns">
+      <button class="btn-primary">LAUNCH APP →</button>
+      <button class="btn-secondary" onclick="window.open('https://github.com/ashersolana/SolAura')">VIEW GITHUB</button>
+    </div>
+  </section>
+
+  <!-- TERMINAL -->
+  <section class="terminal-section">
+    <div class="terminal">
+      <div class="terminal-header">
+        <div class="dot" style="background:#ff5f57"></div>
+        <div class="dot" style="background:#febc2e"></div>
+        <div class="dot" style="background:#28c840"></div>
+        <span class="terminal-title">SOLAURA TERMINAL</span>
+      </div>
+      <div class="terminal-body">
+        <div class="terminal-prompt">
+          <span class="prompt-prefix">wallet@solaura:~$ </span>
+          <span class="prompt-text" id="promptText"></span>
+          <span class="cursor" id="cursor"></span>
+        </div>
+        <div class="terminal-response" id="terminalResponse">
+          <span class="response-prefix">SOLAURA › </span>
+          <span id="responseText"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features-section">
+    <p class="section-label">CAPABILITIES</p>
+    <h2 class="section-title">Built for the next billion<br />Solana users</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">◈</div>
+        <h3 class="feature-title">NATURAL LANGUAGE</h3>
+        <p class="feature-desc">Type commands in plain English. No more navigating complex interfaces.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⬡</div>
+        <h3 class="feature-title">ANY SOLANA WALLET</h3>
+        <p class="feature-desc">Phantom, Backpack, Solflare — connect any wallet instantly.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">◉</div>
+        <h3 class="feature-title">AI-POWERED</h3>
+        <p class="feature-desc">Claude AI understands your intent and executes on-chain actions.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⬢</div>
+        <h3 class="feature-title">SECURE BY DESIGN</h3>
+        <p class="feature-desc">Private keys never touch the AI layer. Every action requires confirmation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>Ready to try SolAura?</h2>
+    <p>Connect your wallet and start managing with plain English.</p>
+    <button class="btn-primary">CONNECT WALLET →</button>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    SOLAURA ✦ · OPEN SOURCE · MIT LICENSE · BUILT ON SOLANA
+  </footer>
+
+  <script>
+    const COMMANDS = [
+      "What's my SOL balance?",
+      "Show my token portfolio",
+      "Send 0.5 SOL to 9x3...abc",
+      "Explain my last transaction",
+      "What tokens am I holding?",
+      "Swap 10 USDC to SOL",
+    ];
+
+    const RESPONSES = [
+      "You have 4.521 SOL — worth $678.23 USD 💰",
+      "Portfolio: 4.5 SOL, 120 USDC, 500 BONK 📊",
+      "Ready to send 0.5 SOL. Confirm? ✅",
+      "Last tx: Received 1.2 SOL from 7k2...xyz 🔍",
+      "Holding: SOL, USDC, BONK, JUP 🪙",
+      "Swapping 10 USDC → 0.067 SOL. Confirm? 🔄",
+    ];
+
+    let msgIndex = 0;
+    let charIndex = 0;
+    let phase = "typing-cmd";
+
+    const promptText = document.getElementById("promptText");
+    const responseText = document.getElementById("responseText");
+    const terminalResponse = document.getElementById("terminalResponse");
+
+    function animate() {
+      const cmd = COMMANDS[msgIndex];
+      const res = RESPONSES[msgIndex];
+
+      if (phase === "typing-cmd") {
+        if (charIndex < cmd.length) {
+          promptText.textContent = cmd.slice(0, charIndex + 1);
+          charIndex++;
+          setTimeout(animate, 45);
+        } else {
+          charIndex = 0;
+          phase = "typing-res";
+          setTimeout(animate, 500);
+        }
+      } else if (phase === "typing-res") {
+        terminalResponse.classList.add("visible");
+        if (charIndex < res.length) {
+          responseText.textContent = res.slice(0, charIndex + 1);
+          charIndex++;
+          setTimeout(animate, 30);
+        } else {
+          charIndex = 0;
+          phase = "clearing";
+          setTimeout(animate, 2000);
+        }
+      } else if (phase === "clearing") {
+        promptText.textContent = "";
+        responseText.textContent = "";
+        terminalResponse.classList.remove("visible");
+        msgIndex = (msgIndex + 1) % COMMANDS.length;
+        phase = "typing-cmd";
+        setTimeout(animate, 400);
+      }
+    }
+
+    animate();
+
+    function toggleConnect() {
+      const btn = document.getElementById("connectBtn");
+      if (btn.classList.contains("connected")) {
+        btn.classList.remove("connected");
+        btn.textContent = "CONNECT WALLET";
+      } else {
+        btn.classList.add("connected");
+        btn.textContent = "◉ CONNECTED";
+      }
+    }
+  </script>
+</body>
+</html>
