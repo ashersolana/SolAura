@@ -28,7 +28,7 @@ SolAura bridges the gap between AI and Solana. Connect your Solana wallet, type 
 - React + Tailwind CSS
 - @solana/web3.js
 - @solana/wallet-adapter
-- Claude AI / OpenAI API
+- AI Language Model API
 - Solana Mainnet
 
 ## Why Solana?
