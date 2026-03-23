@@ -1,4 +1,4 @@
-# SolAura 🌟
+# SolAura ✨
 
 > AI-powered Solana wallet assistant — manage your wallet with plain English.
 
